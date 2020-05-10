@@ -1,0 +1,25 @@
+version: '3'
+services:
+
+    web:
+       name: exchange_rate_app
+       build: .
+       ports:
+          - "8080:8080"
+       restart : on-failure
+       environment:
+          - RDS_HOST: mysql
+       depends_on: mysql
+    
+    mysql:
+       name : mysql_database
+       image: mysql
+       restart : on-failure
+       environment:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE=exchange_rate
+       ports:
+          - "3306:3306"
+       volume:
+          - $PWD/data:/var/lib/mysql
+       

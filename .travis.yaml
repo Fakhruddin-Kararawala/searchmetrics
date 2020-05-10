@@ -1,0 +1,31 @@
+sudo: required
+services:
+  - docker
+
+before_install:
+  - docker build -t fkarara/exchange-rates -f Dockerfile .
+
+script:
+  - docker run fkarara/exchange-rates mvn test -- --coverage
+
+after_success:
+  - docker build -t fkarara/exchange-rates -f Dockerfile .
+  
+  # Log in to the docker CLI
+  - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+  
+  # Take those images and push them to docker hub
+  - docker push fkarara/exchange-rates
+
+deploy:
+  provider: elasticbeanstalk
+  region: us-west-1
+  app: exchange-rates-docker
+  env: MultiDocker-env
+  bucket_name: elasticbeanstalk-us-west-1-306476627547
+  bucket_path: exchange-rates
+  on:
+    branch: master
+  access_key_id: $AWS_ACCESS_KEY
+  secret_access_key:
+    secure: $AWS_SECRET_KEY

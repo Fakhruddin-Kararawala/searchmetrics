@@ -1,0 +1,21 @@
+spring:
+    datasource:
+        url: jdbc:mysql://${RDS_HOST:localhost}:${RDS_PORT:3306}/${RDS_DB_NAME:exchange_rate}
+        username: ${RDS_DB_USER_NAME:root}
+        password: ${RDS_DB_PASSWORD:root}
+        driverClassName: com.mysql.cj.jdbc.Driver
+
+    jpa:
+        show-sql: true
+        hibernate:
+            ddl-auto: update
+            naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+
+coinmarketcap:
+    endpoint: https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest?start=1&limit=1
+    apiKey: f546ea95-02a5-4e60-8fb5-d3a4901633bb
+    currencies: USD
+    cron: 0 */1 8-18 * * MON-FRI
